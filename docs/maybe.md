@@ -192,7 +192,7 @@ A reference to the Nothing type class; a subclass of Maybe.
 ## Maybe.Nothing Methods
 
 ### Nothing map()
-`m.map :: (Function f) -> Nothing`
+`m.map :: (Function f) -> m`
 
 Takes a function `f` as an argument and returns the same Nothing instance. `f` will not be invoked.
 
@@ -204,7 +204,9 @@ assert(x === m);
 ```
 
 ### Nothing bimap()
-`m.bimap :: (Function a, Function b) -> Nothing`
+`m.bimap :: (Function a, Function b) -> m`
+
+Takes a sad Function `a` and a happy Function `b`. The sad Function `a()` will be invoked with the `Maybe.nothingness` value as the only argument, but the return value will be ignored.
 
 ```js
 const sad = () => 2
@@ -215,11 +217,21 @@ assert(x === m);
 ```
 
 ### Nothing ap()
+`m.ap :: (Maybe b) -> m`
+
+Takes a Maybe intance `b` as the only argument and returns the same Nothing instance. `b.map()` will not be invoked.
+
+```js
+const a = Maybe.nothing()
+const b = Maybe.just();
+const x = a.ap(b);
+assert(x === a);
+```
 
 ### Nothing chain()
-`m.chain :: (Function f) -> Nothing`
+`m.chain :: (Function f) -> m`
 
-Takes a function `f` as an argument and returns the same Nothing instance. `f` will not be invoked.
+Takes a function `f` as the only argument and returns the same Nothing instance. `f` will not be invoked.
 
 ```js
 const f = () => 1
