@@ -43,7 +43,7 @@ By returning a Maybe from `readFileSync()` and combining it with `map()`, the re
 
 ```js
 class Maybe {
-    valueOf() {
+    extract() {
         return this.value;
     }
 
@@ -56,9 +56,11 @@ class Maybe {
     }
 }
 
+class Nothingness {}
+
 class Nothing extends Maybe {
     constructor() {
-        this.value = null;
+        this.value = Maybe.nothingness;
     }
 
     map(fn) {
@@ -78,6 +80,7 @@ class Just extends Maybe {
 
 Maybe.Just = Just;
 Maybe.Nothing = Nothing;
+Maybe.nothingness = new Nothingness();
 
 const partial = (fn, args) => {
     return fn(...args);
@@ -115,7 +118,7 @@ const transformFile = (fpath, delimeter) => {
         map(splitLines),
         map(partial(rejoinLines, [ delimeter ])),
         map(partial(writeFileSync, [ fpath ])),
-    )(fpath).valueOf();
+    )(fpath).extract();
 };
 ```
 
@@ -138,4 +141,9 @@ var Maybe = KixxAtypes.Maybe;
 
 ## Specifications
 - [Functor](https://github.com/fantasyland/fantasy-land#functor)
+- [Bifunctor](https://github.com/fantasyland/fantasy-land#bifunctor)
+- [Applicative](https://github.com/fantasyland/fantasy-land#applicative)
 - [Chain](https://github.com/fantasyland/fantasy-land#chain)
+- [Monad](https://github.com/fantasyland/fantasy-land#monad)
+- [Extend](https://github.com/fantasyland/fantasy-land#extend)
+- [Comonad](https://github.com/fantasyland/fantasy-land#comonad)
