@@ -176,6 +176,24 @@ A reference to the Nothing type class; a subclass of Maybe.
 ## Maybe.Just Methods
 
 ### Just map()
+`map :: Just f => f a ~> (a -> b) -> f b`
+
+Where `f` is an instance of `Just`, `f.map()` takes a function which maps `a` to `b` as an argument and returns `b` wrapped in an instance of `Just`.
+
+```js
+// Simplified implementation.
+Just.prototype.map = (f) => {
+    return new Just(f(this.value));
+};
+```
+
+```js
+const fn = (v) => v * 2;
+const a = Maybe.just(6);
+const b = a.map(fn);
+assert(b.value === 12);
+assert(b.extract() === 12);
+```
 
 ### Just bimap()
 
