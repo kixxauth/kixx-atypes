@@ -1,10 +1,15 @@
 # Maybe
-Used when something may return a null value, or we want to represent the return value of a function as something or nothing. Maybe it's something, maybe it's nothing.
+The Maybe type is used when something may return a null value, or we want to represent the return value of a function as something or nothing. Maybe it's something, maybe it's nothing.
 
 Typically we would want to do something like this:
 ```js
-const partial = (fn, args) => {
-    return fn(...args);
+// Takes an Array of arguments `args` and returns a function which concats the
+// arguments and applies them to Function `fn`.
+const partial = (fn, args1) => {
+    return function (...args2) {
+        const args = args1.concat(args2);
+        return fn(...args);
+    };
 };
 
 const readFileSync = (path) => {
@@ -82,14 +87,21 @@ Maybe.Just = Just;
 Maybe.Nothing = Nothing;
 Maybe.nothingness = new Nothingness();
 
-const partial = (fn, args) => {
-    return fn(...args);
+// Takes an Array of arguments `args` and returns a function which concats the
+// arguments and applies them to Function `fn`.
+const partial = (fn, args1) => {
+    return function (...args2) {
+        const args = args1.concat(args2);
+        return fn(...args);
+    };
 };
 
-// Our new map() helper can be used on any object
+// Our map helper can be used on any object
 // with a .map() method, including a normal Array.
-const map = (fn, a) => {
-    return a.map(fn);
+const map = (fn) => {
+    return function (a) {
+        return a.map(fn);
+    };
 };
 
 const readFileSync = (path) => {
@@ -122,7 +134,7 @@ const transformFile = (fpath, delimeter) => {
 };
 ```
 
-Just knowing that `readFileSync()` returns a Maybe instance, we can then `map()` the rest of the composition and everything will 'just work'.
+Just knowing that `readFileSync()` returns a Maybe instance, we can then `map()` the rest of the composition and everything will 'just work'. If `readFileSync()` returns a `Maybe.Nothing`, then `splitLines()`, `rejoinLines()`, and `writeFileSync()` will never be called. `transformFile()` will return `Maybe.nothingness`.
 
 ## Importing
 ```js
@@ -176,9 +188,11 @@ A reference to the Nothing type class; a subclass of Maybe.
 ## Maybe.Just Methods
 
 ### Just map()
-`map :: Just f => f a ~> (a -> b) -> f b`
+`Just/map :: Just f => f a ~> (a -> b) -> f b`
 
-Where `f` is an instance of `Just`, `f.map()` takes a function which maps `a` to `b` as an argument and returns `b` wrapped in an instance of `Just`.
+Where `Just f` is an instance of `Just`, `f.map()` takes a function which maps `a` to `b` as an argument and returns `b` wrapped in an instance of `Just`.
+
+`f.map((a) => b) // returns Just(b)`
 
 ```js
 // Simplified implementation.
@@ -187,6 +201,7 @@ Just.prototype.map = (f) => {
 };
 ```
 
+#### Just map() example
 ```js
 const fn = (v) => v * 2;
 const a = Maybe.just(6);
