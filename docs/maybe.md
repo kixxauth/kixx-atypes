@@ -188,11 +188,13 @@ A reference to the Nothing type class; a subclass of Maybe.
 ## Maybe.Just Methods
 
 ### Just map()
-`Just/map :: Just f => f a ~> (a -> b) -> f b`
+`Just a ~> (a -> b) -> Just b`
 
-Where `Just f` is an instance of `Just`, `f.map()` takes a function which maps `a` to `b` as an argument and returns `b` wrapped in an instance of `Just`.
+`Just a` is an instance of `Just` which wraps `a`. `.map()` takes a function which maps `a` to `b` as the single argument. `.map()` will return `b` wrapped in an instance of `Just`.
 
-`f.map((a) => b) // returns Just(b)`
+`Maybe.just(a).map((a) => b) // returns Just(b)`
+
+[map (Functor) specification](https://github.com/fantasyland/fantasy-land#functor)
 
 ```js
 // Simplified implementation.
@@ -200,8 +202,6 @@ Just.prototype.map = (f) => {
     return new Just(f(this.value));
 };
 ```
-
-__Link =>__ [map (Functor) specification](https://github.com/fantasyland/fantasy-land#functor)
 
 #### Just map() example
 ```js
@@ -213,6 +213,20 @@ assert(b.extract() === 12);
 ```
 
 ### Just bimap()
+`Just a ~> (_, a -> b) -> Just b`
+
+`Just a` is an instance of `Just` which wraps `a`. `.bimap()` takes two functions, but only the second will be invoked. The second "happy path" function will be called with `a` and maps it to `b`. `.bimap()` will return `b` wrapped in an instance of `Just`.
+
+`Maybe.just(a).bimap(noop, (a) => b) // returns Just(b)`
+
+[bimap (Bifunctor) specification](https://github.com/fantasyland/fantasy-land#bifunctor)
+
+```js
+// Simplified implementation.
+Just.prototype.bimap = (sad, happy) => {
+    return new Just(happy(this.value));
+};
+```
 
 ### Just ap()
 
