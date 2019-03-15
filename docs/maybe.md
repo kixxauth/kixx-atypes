@@ -201,6 +201,8 @@ Just.prototype.map = (f) => {
 };
 ```
 
+[map (Functor) specification](https://github.com/fantasyland/fantasy-land#functor)
+
 #### Just map() example
 ```js
 const fn = (v) => v * 2;
