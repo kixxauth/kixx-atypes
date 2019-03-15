@@ -201,7 +201,7 @@ Just.prototype.map = (f) => {
 };
 ```
 
-[map (Functor) specification](https://github.com/fantasyland/fantasy-land#functor)
+__Link =>__ [map (Functor) specification](https://github.com/fantasyland/fantasy-land#functor)
 
 #### Just map() example
 ```js
